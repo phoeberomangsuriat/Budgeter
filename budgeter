@@ -1,0 +1,108 @@
+// This program will give a summary of one's monthly spending/earning summary.
+
+//allows extended features of Java.
+import java.util.*;
+
+// A class that organizes the format of the program.
+public class Budgeter {
+
+    //sets the initial income amount 
+    static double totalIncome = 0;
+    //sets the initial expense amount
+    static double totalExpense = 0;
+    // Class constant for the days in a month.
+    public static final int DAYS_IN_MONTH = 31;
+
+    //The main string that organizes the structure of the program.
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        begSentence();
+        incomeCategory(input);
+        expenseCategory(input);
+        totalIncomeExpense();
+        summaryStatement(totalIncome, totalExpense);
+    }
+
+    //prints out the introduction
+    public static void begSentence() {
+        System.out.println("This program asks for your monthly income and");
+        System.out.println("expenses, then tells you your net monthly income.");
+        System.out.println("");     
+    }
+
+    //creates a section where users can input their monthly incomes in categories
+    //these values will be added up
+    public static double incomeCategory(Scanner input) {
+        System.out.print("How many categories of income? ");
+        int numIncomeCategory = input.nextInt();
+        for (int i=1; i<= numIncomeCategory; i++) { 
+            System.out.print("    " + "Next income amount? $");
+            double incomeAmount = input.nextDouble();
+            totalIncome += round(incomeAmount);
+        }
+        System.out.println();
+
+        return totalIncome; 
+    }
+
+    //creates a section where users can input their monthly expenses in categories
+    //calculates the total value respectively, depending on the monthly or daily option
+    public static double expenseCategory(Scanner input) {
+        System.out.print("Enter 1) monthly or 2) daily expenses? ");
+        int monthlyOrDaily = input.nextInt();
+        System.out.print("How many categories of expense? ");
+        int numExpenseCategory = input.nextInt();
+        for (int i=1; i<= numExpenseCategory; i++) {
+            System.out.print("    " + "Next expense amount? $");
+            double expenseAmount = input.nextDouble();
+            if (monthlyOrDaily == 1) {
+                totalExpense += round(expenseAmount);
+            } else {
+                totalExpense += round(expenseAmount*DAYS_IN_MONTH);
+            }
+        }
+        System.out.println();
+
+        return totalExpense;
+    }
+
+    //prints out the total income and expenses per month and per day
+    public static void totalIncomeExpense() {
+        System.out.println("Total income = $" + totalIncome + " ($" + round(totalIncome/DAYS_IN_MONTH) + 
+                            "/day)");
+        System.out.println("Total expenses = $" + round(totalExpense) + " ($" + 
+                            round(totalExpense/DAYS_IN_MONTH) + "/day)");
+        System.out.println();
+    }
+
+    //prints out the summary of how much the user spends or saves. 
+    public static void summaryStatement(double totalIncome, double totalExpense) { 
+        double netIncome = round(totalIncome - totalExpense);
+        double absValue = Math.abs(netIncome);
+    
+        if (netIncome <= 0) {
+            System.out.println("You spent $" + absValue + " more than you earned this month.");
+            if (netIncome > -250) {
+                System.out.println("You're a spender.");
+                System.out.println("Better stop before you become a shopaholic!!! -.-");
+            } else {
+                System.out.println("You're a big spender.");
+                System.out.println("My goodness! You need help");
+                }
+        } else {
+            System.out.println("You earned $" + absValue + " " + "more than you spent this month.");
+            if (netIncome <= 250) {
+                System.out.println("You're a saver."); 
+                System.out.println("You're super cool!");
+            } else {
+                System.out.println("You're a big saver.");
+                System.out.println("WOW! teach me your ways!");
+            }
+        } 
+    }
+
+    //method to round off numbers
+    public static double round(double num) {
+        return Math.round(num*100.0)/100.0;
+    }
+}
